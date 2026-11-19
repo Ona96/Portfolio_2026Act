@@ -3,7 +3,9 @@ import { Contact } from "@/components/sections/Contact";
 import { FeaturedProjects } from "@/components/sections/FeaturedProjects";
 import { Hero } from "@/components/sections/Hero";
 import { Technologies } from "@/components/sections/Technologies";
+import { Marquee } from "@/components/Marquee";
 import { StatsStrip } from "@/components/StatsStrip";
+import { portfolioConfig } from "@/config/portfolio";
 import { getPortfolioData } from "@/lib/github";
 
 export const revalidate = 1800; // mantener igual a portfolioConfig.repositories.revalidateSeconds
@@ -13,6 +15,7 @@ export default async function HomePage() {
   return (
     <>
       <Hero data={data} />
+      <Marquee items={portfolioConfig.about.interests} />
       <StatsStrip data={data} />
       <FeaturedProjects data={data} />
       <Technologies data={data} />

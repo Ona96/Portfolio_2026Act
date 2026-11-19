@@ -3,6 +3,8 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { IdleEffects } from "@/components/IdleEffects";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import { portfolioConfig } from "@/config/portfolio";
 import "./globals.css";
 
@@ -50,6 +52,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Saltar al contenido
         </a>
+        <ScrollProgress />
+        <IdleEffects />
         <Header />
         <main id="contenido">{children}</main>
         <Footer />

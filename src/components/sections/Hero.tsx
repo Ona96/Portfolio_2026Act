@@ -4,6 +4,7 @@ import Image from "next/image";
 import { MapPin } from "lucide-react";
 import { GitHubIcon, LinkedInIcon } from "@/components/ui/icons";
 import { Button } from "@/components/ui/Button";
+import { Parallax } from "@/components/Parallax";
 import { portfolioConfig } from "@/config/portfolio";
 import { sanitizeUrl } from "@/lib/projects";
 import { formatDate, languageColor } from "@/lib/utils";
@@ -35,15 +36,22 @@ export function Hero({ data }: { data: PortfolioData }) {
   const photo = findPhoto();
 
   return (
-    <section className="relative overflow-hidden">
-      {/* Cielo synthwave: estrellas, sol retro y piso en perspectiva (solo modo oscuro) */}
-      <div className="synth-stars pointer-events-none absolute inset-x-0 top-0 h-[58%]" aria-hidden="true" />
-      <div className="synth-sun pointer-events-none" aria-hidden="true" />
-      <div className="synth-floor pointer-events-none" aria-hidden="true" />
+    <section className="relative flex min-h-screen items-center overflow-hidden supports-[height:100svh]:min-h-svh">
+      {/* Cielo synthwave en capas con parallax (solo modo oscuro):
+          cada plano se mueve a su propia velocidad y da profundidad. */}
+      <Parallax speed={0.08} className="pointer-events-none absolute inset-x-0 top-0 h-[58%]">
+        <div className="synth-stars absolute inset-0" />
+      </Parallax>
+      <Parallax speed={0.18} className="pointer-events-none absolute inset-x-0 top-0 h-[52%]">
+        <div className="synth-sun" />
+      </Parallax>
+      <Parallax speed={0.3} className="pointer-events-none absolute inset-0">
+        <div className="synth-floor" />
+      </Parallax>
       <div className="bg-glow pointer-events-none absolute -top-32 left-1/2 h-96 w-[42rem] max-w-none -translate-x-1/2" aria-hidden="true" />
       <div className="scanlines pointer-events-none absolute inset-0" aria-hidden="true" />
 
-      <div className="relative mx-auto grid w-full max-w-6xl gap-12 px-5 pb-16 pt-14 sm:px-8 sm:pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+      <div className="relative mx-auto grid w-full max-w-6xl gap-12 px-5 pb-28 pt-24 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <div className="hero-rise">
           <ul className="mb-6 flex flex-wrap gap-2" aria-label="Áreas de trabajo">
             {AREAS.map((area) => (
@@ -170,6 +178,14 @@ export function Hero({ data }: { data: PortfolioData }) {
           )}
         </div>
       </div>
+
+      {/* Invitación al scroll */}
+      <p
+        className="pointer-events-none absolute bottom-6 left-1/2 hidden -translate-x-1/2 select-none font-mono text-[10px] uppercase tracking-[0.35em] text-mute/60 sm:block"
+        aria-hidden="true"
+      >
+        scroll ▾
+      </p>
     </section>
   );
 }

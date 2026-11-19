@@ -13,6 +13,7 @@ import type { LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { Section } from "@/components/ui/Section";
 import { portfolioConfig } from "@/config/portfolio";
+import { cn } from "@/lib/utils";
 import { languageColor } from "@/lib/utils";
 import type { PortfolioData } from "@/types/github";
 
@@ -40,6 +41,14 @@ export function Technologies({ data }: { data: PortfolioData }) {
   const declaredTechnologies = portfolioConfig.declaredTechnologies;
   const languages = data.languages.filter((l) => l.projects > 0);
 
+  /** Bento: las dos primeras áreas ocupan celdas dobles con mini escena;
+      si la última queda sola, ocupa la fila completa. */
+  function spanFor(index: number): string {
+    if (index < 2) return "sm:col-span-2";
+    if (index === interests.length - 1 && (interests.length - 2) % 4 === 1) return "sm:col-span-2 lg:col-span-4";
+    return "";
+  }
+
   return (
     <Section
       id="tecnologias"
@@ -49,17 +58,34 @@ export function Technologies({ data }: { data: PortfolioData }) {
     >
       <div className="space-y-10">
         {interests.length > 0 && (
-          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {interests.map((area, index) => {
               const Icon = iconFor(area);
+              const feature = index < 2;
               return (
-                <li key={area}>
-                  <Reveal delay={(index % 3) * 60} className="h-full">
-                    <div className="flex h-full items-start gap-3 rounded-xl border border-line bg-panel p-4 shadow-card">
-                      <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-raised text-accent">
-                        <Icon className="h-4 w-4" aria-hidden="true" />
+                <li key={area} className={cn("h-full", spanFor(index))}>
+                  <Reveal variant={feature ? "up" : "scale"} delay={(index % 4) * 70} className="h-full">
+                    <div
+                      className={cn(
+                        "relative flex h-full items-start gap-3 overflow-hidden rounded-xl border border-line bg-panel p-4 shadow-card transition-colors duration-200 hover:border-accent/50",
+                        feature && "min-h-[6rem] p-5",
+                      )}
+                    >
+                      {feature && <div className="synth-mini" aria-hidden="true" />}
+                      <span
+                        className={cn(
+                          "relative mt-0.5 inline-flex shrink-0 items-center justify-center rounded-lg bg-raised text-accent",
+                          feature ? "h-11 w-11" : "h-9 w-9",
+                        )}
+                      >
+                        <Icon className={cn(feature ? "h-5 w-5" : "h-4 w-4")} aria-hidden="true" />
                       </span>
-                      <p className="text-sm font-medium leading-relaxed">{area}</p>
+                      <div className="relative">
+                        <p className={cn("font-medium leading-relaxed", feature ? "text-base" : "text-sm")}>{area}</p>
+                        <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.25em] text-mute/70">
+                          {feature ? "// stack principal" : `// área ${String(index + 1).padStart(2, "0")}`}
+                        </p>
+                      </div>
                     </div>
                   </Reveal>
                 </li>
@@ -69,7 +95,7 @@ export function Technologies({ data }: { data: PortfolioData }) {
         )}
 
         {languages.length > 0 && (
-          <Reveal>
+          <Reveal variant="blur">
             <div>
               <h3 className="mb-4 font-mono text-xs font-medium uppercase tracking-[0.2em] text-mute">
                 Lenguajes en mis repositorios
@@ -78,7 +104,7 @@ export function Technologies({ data }: { data: PortfolioData }) {
                 {languages.map((lang) => (
                   <li
                     key={lang.name}
-                    className="inline-flex items-center gap-2 rounded-lg border border-line bg-panel px-3 py-1.5 text-sm shadow-card"
+                    className="inline-flex items-center gap-2 rounded-lg border border-line bg-panel px-3 py-1.5 text-sm shadow-card transition-colors duration-200 hover:border-accent/50"
                   >
                     <span
                       className="h-2.5 w-2.5 rounded-full"
@@ -97,7 +123,7 @@ export function Technologies({ data }: { data: PortfolioData }) {
         )}
 
         {declaredTechnologies.length > 0 && (
-          <Reveal>
+          <Reveal variant="blur">
             <div>
               <h3 className="mb-4 font-mono text-xs font-medium uppercase tracking-[0.2em] text-mute">
                 Herramientas y frameworks
@@ -106,7 +132,7 @@ export function Technologies({ data }: { data: PortfolioData }) {
                 {declaredTechnologies.map((tech) => (
                   <li
                     key={tech.name}
-                    className="rounded-lg border border-line bg-panel px-3 py-1.5 text-sm shadow-card"
+                    className="rounded-lg border border-line bg-panel px-3 py-1.5 text-sm shadow-card transition-colors duration-200 hover:border-accent/50"
                   >
                     {tech.name}
                     <span className="ml-2 text-xs text-mute">{tech.group}</span>

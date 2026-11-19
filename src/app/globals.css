@@ -127,6 +127,64 @@ html.light .synth-floor { display: none; }
   background-image: repeating-linear-gradient(to bottom, var(--scanline) 0 1px, transparent 1px 3px);
 }
 
+/* ---------------- Vida por inactividad (modo "attract") ----------------
+   IdleEffects agrega html.idle cuando nadie interactúa: la escena
+   del Hero empieza a "avanzar" sola hacia el sol. */
+html.idle .synth-floor { animation: grid-drive 1.5s linear infinite; }
+html.idle .synth-sun { animation: sun-pulse 3.2s ease-in-out infinite; }
+html.idle .synth-stars { animation: star-twinkle 4s ease-in-out infinite; }
+
+@keyframes grid-drive {
+  /* 54px = un período exacto de la grilla: loop perfecto */
+  from { background-position: 0 0; }
+  to { background-position: 0 54px; }
+}
+
+@keyframes sun-pulse {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 0.3; }
+}
+
+/* ---------------- Glitch CRT puntual ----------------
+   IdleEffects dispara un micro-glitch cada ~45s de navegación:
+   el contenido tiembla apenas y las scanlines parpadean. */
+body.glitching main { animation: glitch-shift 0.34s steps(2) both; }
+body.glitching header .font-mono {
+  text-shadow: -2px 0 rgb(var(--accent2) / 0.55), 2px 0 rgb(var(--accent) / 0.55);
+}
+
+@keyframes glitch-shift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, -2px); }
+  80% { transform: translate(1px, 1px); }
+  100% { transform: none; }
+}
+
+.crt-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  background: repeating-linear-gradient(to bottom, rgb(var(--fg) / 0.035) 0 1px, transparent 1px 3px);
+}
+.crt-flash.on { animation: crt-flicker 0.34s steps(2) both; }
+
+@keyframes crt-flicker {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+  50% { opacity: 0.35; }
+  75% { opacity: 0.85; }
+  100% { opacity: 0; }
+}
+
 /* ---------------- Firmas visuales ---------------- */
 /* Texto con degradado violeta → cian */
 .text-gradient {
@@ -144,18 +202,156 @@ html.light .glow-accent {
   box-shadow: 0 0 18px rgb(var(--accent) / 0.22), 0 0 44px rgb(var(--accent) / 0.1);
 }
 
-/* ---------------- Animaciones ---------------- */
+/* ---------------- Construcción al scroll ----------------
+   Reveal 2.0: el estado inicial solo existe con JS activo
+   (html.js), así sin JavaScript todo el contenido se ve. */
+.reveal {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition:
+    opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+html.js .reveal:not(.revealed) { opacity: 0; }
+html.js .reveal[data-variant="up"]:not(.revealed) { transform: translateY(20px); }
+html.js .reveal[data-variant="left"]:not(.revealed) { transform: translateX(-26px); }
+html.js .reveal[data-variant="right"]:not(.revealed) { transform: translateX(26px); }
+html.js .reveal[data-variant="blur"]:not(.revealed) { filter: blur(10px); transform: translateY(8px); }
+html.js .reveal[data-variant="scale"]:not(.revealed) { transform: scale(0.95); }
+
+/* Subrayado neón que se traza bajo los títulos de sección */
+.draw-line { position: relative; display: inline-block; }
+.draw-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.45rem;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(to right, rgb(var(--accent)), rgb(var(--accent2)));
+  box-shadow: 0 0 12px rgb(var(--accent) / 0.45);
+  transform-origin: left center;
+  transition: transform 0.9s cubic-bezier(0.22, 0.61, 0.21, 1) 0.2s;
+}
+html.js .reveal:not(.revealed) .draw-line::after { transform: scaleX(0); }
+
+/* Timeline de experiencia: la línea se dibuja de arriba a abajo */
+.tl-progress {
+  position: absolute;
+  left: 0.5px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  border-radius: 999px;
+  background: linear-gradient(to bottom, rgb(var(--accent)), rgb(var(--accent2)));
+  box-shadow: 0 0 10px rgb(var(--accent) / 0.35);
+  transform-origin: top center;
+  transition: transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s;
+}
+.tl-dot {
+  box-shadow: 0 0 8px rgb(var(--accent) / 0.55);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+html.js .reveal:not(.revealed) .tl-progress { transform: scaleY(0); }
+html.js .reveal:not(.revealed) .tl-dot { opacity: 0; transform: scale(0.3); }
+
+/* Panel HUD: esquinas neón para los indicadores */
+.hud-cell { position: relative; }
+.hud-cell::before,
+.hud-cell::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgb(var(--accent) / 0.75);
+}
+.hud-cell::before { left: 0; top: 0; border-right: none; border-bottom: none; }
+.hud-cell::after { right: 0; bottom: 0; border-left: none; border-top: none; }
+
+/* Cinta infinita de tecnologías */
+.marquee-track { animation: marquee 28s linear infinite; }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Tilt 3D de las cards (el JS de TiltCard mueve el transform) */
+.tilt { transition: transform 0.3s ease; will-change: transform; }
+
+/* ---------------- Mini escenas synthwave ---------------- */
+/* Marca de agua en celdas grandes del bento */
+.synth-mini {
+  position: absolute;
+  right: -25%;
+  bottom: -35%;
+  width: 65%;
+  height: 85%;
+  background-image:
+    repeating-linear-gradient(to right, rgb(var(--accent) / 0.18) 0 1px, transparent 1px 16px),
+    repeating-linear-gradient(to bottom, rgb(var(--accent) / 0.18) 0 1px, transparent 1px 11px);
+  transform: perspective(120px) rotateX(55deg);
+  transform-origin: center top;
+  pointer-events: none;
+}
+
+/* Portada decorativa de proyectos sin imagen */
+.synth-card-sun {
+  position: absolute;
+  left: 50%;
+  bottom: -34%;
+  translate: -50% 0;
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 50%;
+  background: linear-gradient(to bottom, rgb(var(--accent2) / 0.4), rgb(var(--accent) / 0.6));
+  -webkit-mask-image: linear-gradient(to bottom, black 58%, transparent 59%);
+  mask-image: linear-gradient(to bottom, black 58%, transparent 59%);
+  opacity: 0.9;
+}
+.synth-card-grid {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  bottom: -6%;
+  height: 55%;
+  background-image:
+    repeating-linear-gradient(to right, rgb(var(--accent) / 0.28) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(to bottom, rgb(var(--accent) / 0.28) 0 1px, transparent 1px 14px);
+  transform: perspective(140px) rotateX(58deg);
+  transform-origin: center top;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 40%, black 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, black 40%, black 82%, transparent 100%);
+}
+
+/* Horizonte al pie del footer */
+.synth-foot {
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  bottom: -12%;
+  height: 68%;
+  background-image:
+    repeating-linear-gradient(to right, rgb(var(--accent) / 0.2) 0 1px, transparent 1px 70px),
+    repeating-linear-gradient(to bottom, rgb(var(--accent) / 0.2) 0 1px, transparent 1px 34px);
+  transform: perspective(240px) rotateX(60deg);
+  transform-origin: center top;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 35%, black 85%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, black 35%, black 85%, transparent 100%);
+  pointer-events: none;
+}
+html.light .synth-mini,
+html.light .synth-card-sun,
+html.light .synth-card-grid,
+html.light .synth-foot { display: none; }
+
+/* ---------------- Animaciones base ---------------- */
 @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 .hero-rise { animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 .hero-rise-late { animation: rise 0.7s 0.12s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 .hero-rise-later { animation: rise 0.7s 0.24s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
-
-/* Aparición al hacer scroll: solo se oculta si hay JS (el script de
-   tema agrega .js), así el contenido nunca queda invisible sin JS.
-   Es solo desvanecido, sin translate: el desplazamiento superponía
-   bloques de texto adyacentes durante el scroll. */
-.reveal { opacity: 1; transition: opacity 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
-html.js .reveal:not(.revealed) { opacity: 0; }
 
 @keyframes caret { 0%, 45% { opacity: 1; } 50%, 100% { opacity: 0; } }
 .term-caret { animation: caret 1.1s steps(1) infinite; }

@@ -8,8 +8,11 @@ export function Footer() {
   const profileUrl = `https://github.com/${owner.githubUser}`;
 
   return (
-    <footer className="border-t border-line/70">
-      <div className="mx-auto grid max-w-6xl gap-8 px-5 py-10 sm:grid-cols-[1.5fr_1fr_1fr] sm:px-8">
+    <footer className="relative overflow-hidden border-t border-line/70">
+      {/* Horizonte synthwave al pie (solo modo oscuro) */}
+      <div className="synth-foot" aria-hidden="true" />
+
+      <div className="relative mx-auto grid max-w-6xl gap-8 px-5 py-10 sm:grid-cols-[1.5fr_1fr_1fr] sm:px-8">
         <div>
           <p className="font-mono text-sm font-medium">
             {owner.githubUser.toLowerCase()}
@@ -43,10 +46,13 @@ export function Footer() {
           </ul>
         </div>
       </div>
-      <div className="border-t border-line/50">
+      <div className="relative border-t border-line/50">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-5 text-xs text-mute sm:flex-row sm:items-center sm:justify-between sm:px-8">
           <p>
             © {year} {owner.name}
+          </p>
+          <p className="font-mono tracking-[0.25em] text-accent/80" aria-hidden="true">
+            EOF // K.R.O.
           </p>
           <p>
             Proyectos sincronizados desde{" "}

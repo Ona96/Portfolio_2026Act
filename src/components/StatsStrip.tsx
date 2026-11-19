@@ -8,9 +8,9 @@ interface Metric {
 }
 
 /**
- * Indicadores del portfolio, construidos solo con datos reales de GitHub.
- * Las métricas sin dato disponible se omiten (nunca se muestran ceros
- * inventados ni cifras de relleno).
+ * Indicadores del portfolio en panel HUD: esquinas neón, números con
+ * degradado y conteo animado. Construidos solo con datos reales de
+ * GitHub; las métricas sin dato disponible se omiten.
  */
 export function StatsStrip({ data }: { data: PortfolioData }) {
   const featuredCount = data.projects.filter((p) => p.featured).length;
@@ -25,16 +25,18 @@ export function StatsStrip({ data }: { data: PortfolioData }) {
 
   return (
     <section aria-label="Indicadores del portfolio" className="border-y border-line/70 bg-panel/40">
-      <Reveal className="mx-auto grid w-full max-w-6xl grid-cols-2 gap-6 px-5 py-8 sm:px-8 lg:grid-cols-4">
-        {metrics.map((metric) => (
-          <div key={metric.label} className="text-center lg:text-left">
-            <p className="text-gradient font-mono text-3xl font-semibold sm:text-4xl">
-              <CountUp value={metric.value} />
-            </p>
-            <p className="mt-1 text-xs text-mute sm:text-sm">{metric.label}</p>
-          </div>
+      <div className="mx-auto grid w-full max-w-6xl grid-cols-2 gap-6 px-5 py-8 sm:px-8 lg:grid-cols-4">
+        {metrics.map((metric, index) => (
+          <Reveal key={metric.label} variant="scale" delay={index * 90}>
+            <div className="hud-cell px-2 py-3 text-center lg:text-left">
+              <p className="text-gradient font-mono text-3xl font-semibold sm:text-4xl">
+                <CountUp value={metric.value} />
+              </p>
+              <p className="mt-1 text-xs text-mute sm:text-sm">{metric.label}</p>
+            </div>
+          </Reveal>
         ))}
-      </Reveal>
+      </div>
     </section>
   );
 }
