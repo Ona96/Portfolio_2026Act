@@ -50,8 +50,10 @@ export const portfolioConfig = {
   },
 
   contact: {
-    email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "",
-    linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL ?? "",
+    // Valores reales como defaults: funcionan en cualquier deployment sin
+    // configurar nada. Las variables de entorno pueden sobreescribirlos.
+    email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "kvnrenott@gmail.com",
+    linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL ?? "https://www.linkedin.com/in/kevrenott96",
     /** Número con código de país, sin + ni espacios. Vacío = no se muestra. */
     whatsapp: "",
   },

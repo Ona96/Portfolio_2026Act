@@ -14,11 +14,18 @@ export function ExperienceTimeline() {
     <Reveal variant="right">
       <div>
         <h3 className="mb-6 font-mono text-xs uppercase tracking-[0.25em] text-mute">&gt; mission log</h3>
-        <div className="relative pl-6">
-          <span className="tl-progress" aria-hidden="true" />
-          <ol className="relative space-y-8">
+        <div className="pl-6">
+          <ol className="space-y-8">
             {experience.map((item, index) => (
               <li key={index} className="relative">
+                {/* Línea que une este nodo con el siguiente: en el último corta. */}
+                {index < experience.length - 1 && (
+                  <span
+                    className="tl-seg"
+                    style={{ transitionDelay: `${(0.45 + index * 0.25).toFixed(2)}s` }}
+                    aria-hidden="true"
+                  />
+                )}
                 <span
                   className="tl-dot absolute -left-[1.9rem] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-ink bg-accent"
                   style={{ transitionDelay: `${(0.35 + index * 0.25).toFixed(2)}s` }}
