@@ -117,18 +117,19 @@ export const portfolioConfig = {
   /**
    * Ajustes por repositorio, indexados por nombre exacto.
    * Las descripciones reemplazan al campo `description` de la API de GitHub
-   * cuando el repo no la tiene. Las de abajo son BORRADORES breves y honestos:
-   * revisalas y enriquecelas cuando quieras con los detalles reales.
+   * cuando el repo no la tiene. Revisadas y alineadas con el README de cada
+   * repositorio (noviembre 2026).
    */
   projectOverrides: {
     Ecommerce_Facu: {
       category: "web-development",
-      description: "E-commerce desarrollado en PHP como proyecto académico para la facultad.",
+      description:
+        "E-commerce «Venecia Modas» en Laravel (proyecto académico): catálogo, carrito en base de datos, checkout y panel de administración con roles.",
     },
     copyMuebleria: {
       category: "management",
       description:
-        "Sistema de gestión para una mueblería: copia de trabajo del proyecto en el que participé como colaborador.",
+        "Gestión de pagos a proveedores para una mueblería: facturas, cheques con proyecciones en PDF y sincronización entre equipos vía Google Drive. Copia de trabajo del proyecto grupal en el que colaboré.",
     },
   } as Record<string, ProjectOverride>,
 
