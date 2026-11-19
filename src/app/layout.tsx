@@ -1,14 +1,24 @@
 import type { Metadata, Viewport } from "next";
+import { Chakra_Petch } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
+import { BootScreen } from "@/components/BootScreen";
 import { Footer } from "@/components/layout/Footer";
-import { Header } from "@/components/layout/Header";
+import { RailShell } from "@/components/RailShell";
 import { IdleEffects } from "@/components/IdleEffects";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { portfolioConfig } from "@/config/portfolio";
 import "./globals.css";
 
 const { owner, site } = portfolioConfig;
+
+/** Titulares KEVIN-OS: Chakra Petch, techy y angular. */
+const chakra = Chakra_Petch({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-chakra",
+  display: "swap",
+});
 
 /**
  * Script de tema: corre como primer hijo de <body>, antes de pintar el
@@ -36,14 +46,18 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0a0618" },
+    { media: "(prefers-color-scheme: dark)", color: "#080414" },
     { media: "(prefers-color-scheme: light)", color: "#f6f4ff" },
   ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html
+      lang="es"
+      suppressHydrationWarning
+      className={`${GeistSans.variable} ${GeistMono.variable} ${chakra.variable}`}
+    >
       <body className="font-sans">
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <a
@@ -52,11 +66,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Saltar al contenido
         </a>
+        <BootScreen />
+        <RailShell />
         <ScrollProgress />
         <IdleEffects />
-        <Header />
-        <main id="contenido">{children}</main>
-        <Footer />
+        <div className="lg:pl-20">
+          <main id="contenido" className="pb-16 lg:pb-0">
+            {children}
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

@@ -96,8 +96,8 @@ export const portfolioConfig = {
 
     featured: ["TiendaVenecia2026"],
 
-    /** Repositorios ocultos: proyecto a medio camino, repos vacíos, fork del trabajo grupal y el propio portfolio. */
-    excluded: ["ProyectoFacu", "Espacio_Lenguaje", "Portfolio_2026Act", "lgi2023_crud"],
+    /** Repositorios ocultos: proyecto a medio camino, repos vacíos (incluido el repo "Portfolio" en sí) y el fork del trabajo grupal. */
+    excluded: ["ProyectoFacu", "Espacio_Lenguaje", "Portfolio_2026Act", "Portfolio", "lgi2023_crud"],
 
     maxLanguageRequests: 30,
     revalidateSeconds: 1800,

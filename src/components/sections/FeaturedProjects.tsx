@@ -1,4 +1,4 @@
-import { ProjectCard } from "@/components/projects/ProjectCard";
+import { ProjectRow } from "@/components/projects/ProjectRow";
 import { Reveal } from "@/components/Reveal";
 import { Button } from "@/components/ui/Button";
 import { GitHubNotice, EmptyState } from "@/components/ui/Notice";
@@ -12,29 +12,32 @@ export function FeaturedProjects({ data }: { data: PortfolioData }) {
   return (
     <Section
       id="proyectos"
-      eyebrow="01 · Proyectos"
-      title={featured.length > 0 ? "Proyectos destacados" : "Proyectos recientes"}
-      description="Tomados directamente de mis repositorios públicos de GitHub."
+      eyebrow="// 01 :: proyectos"
+      title={featured.length > 0 ? "Módulos principales" : "Módulos recientes"}
+      description="Leídos en vivo desde mis repositorios públicos de GitHub."
     >
       <div className="space-y-6">
         <GitHubNotice data={data} />
         {shown.length === 0 ? (
           data.status !== "error" && (
-            <EmptyState title="Todavía no hay proyectos para mostrar" text="Cuando haya repositorios públicos van a aparecer acá." />
+            <EmptyState
+              title="Sin módulos por ahora"
+              text="Los repositorios públicos van a aparecer acá."
+            />
           )
         ) : (
-          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {shown.map((p, index) => (
-              <li key={p.id} className="h-full">
-                <Reveal delay={(index % 3) * 70}>
-                  <ProjectCard project={p} />
-                </Reveal>
-              </li>
-            ))}
-          </ul>
+          <div className="overflow-hidden rounded-xl border border-line/70">
+            <ul className="divide-y divide-line/60">
+              {shown.map((project, index) => (
+                <ProjectRow key={project.id} project={project} index={index} />
+              ))}
+            </ul>
+          </div>
         )}
         <Reveal className="mt-8 flex justify-center">
-          <Button href="/projects">Ver todos los proyectos</Button>
+          <Button href="/projects" variant="primary" className="glow-accent">
+            Ver catálogo completo
+          </Button>
         </Reveal>
       </div>
     </Section>

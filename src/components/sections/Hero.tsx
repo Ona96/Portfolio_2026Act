@@ -10,8 +10,6 @@ import { sanitizeUrl } from "@/lib/projects";
 import { formatDate, languageColor } from "@/lib/utils";
 import type { PortfolioData } from "@/types/github";
 
-const AREAS = ["E-commerce", "Desarrollo web", "Sistemas de gestión", "Análisis de sistemas"];
-
 /** Tu foto vive en public/ con alguno de estos nombres; aparece sola, sin tocar código. */
 const PHOTO_CANDIDATES = ["avatar.png", "avatar.jpg", "avatar.jpeg", "avatar.webp"];
 
@@ -36,7 +34,10 @@ export function Hero({ data }: { data: PortfolioData }) {
   const photo = findPhoto();
 
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden supports-[height:100svh]:min-h-svh">
+    <section
+      id="inicio"
+      className="relative flex min-h-screen items-center overflow-hidden supports-[height:100svh]:min-h-svh"
+    >
       {/* Cielo synthwave en capas con parallax (solo modo oscuro):
           cada plano se mueve a su propia velocidad y da profundidad. */}
       <Parallax speed={0.08} className="pointer-events-none absolute inset-x-0 top-0 h-[58%]">
@@ -51,25 +52,21 @@ export function Hero({ data }: { data: PortfolioData }) {
       <div className="bg-glow pointer-events-none absolute -top-32 left-1/2 h-96 w-[42rem] max-w-none -translate-x-1/2" aria-hidden="true" />
       <div className="scanlines pointer-events-none absolute inset-0" aria-hidden="true" />
 
-      <div className="relative mx-auto grid w-full max-w-6xl gap-12 px-5 pb-28 pt-24 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+      <div className="relative mx-auto grid w-full max-w-6xl gap-12 px-5 pb-28 pt-24 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+        {/* Identidad apilada en display */}
         <div className="hero-rise">
-          <ul className="mb-6 flex flex-wrap gap-2" aria-label="Áreas de trabajo">
-            {AREAS.map((area) => (
-              <li
-                key={area}
-                className="inline-flex items-center gap-1.5 rounded-full border border-line bg-panel/70 px-3 py-1 text-xs text-mute backdrop-blur"
-              >
-                <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
-                {area}
-              </li>
-            ))}
-          </ul>
+          <p className="font-mono text-xs uppercase tracking-[0.35em] text-mute">
+            <span className="pulse-dot mr-2 inline-block h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
+            disponible para proyectos
+          </p>
 
-          <h1 className="text-5xl font-semibold leading-[1.04] tracking-tight sm:text-6xl">
-            <span className="text-gradient">{owner.name}</span>
+          <h1 className="mt-5 font-display font-bold uppercase leading-[0.95] tracking-tight">
+            <span className="block text-6xl sm:text-7xl xl:text-8xl">Kevin</span>
+            <span className="text-outline block text-6xl sm:text-7xl xl:text-8xl">Rene</span>
+            <span className="text-gradient block text-6xl sm:text-7xl xl:text-8xl">Otto</span>
           </h1>
-          <p className="mt-4 text-xl text-fg/90 sm:text-2xl">{owner.role}</p>
-          <p className="mt-5 max-w-xl leading-relaxed text-mute">{owner.intro}</p>
+
+          <p className="mt-6 font-mono text-sm text-fg/90 sm:text-base">[ {owner.role} ]</p>
           <p className="mt-3 inline-flex items-center gap-1.5 font-mono text-sm text-mute">
             <MapPin className="h-4 w-4 text-accent" aria-hidden="true" />
             {owner.location}
@@ -93,9 +90,8 @@ export function Hero({ data }: { data: PortfolioData }) {
           </div>
         </div>
 
+        {/* Player card + datos de sistema */}
         <div className="hero-rise-late space-y-4">
-          {/* Foto personal en marco neón: si todavía no hay foto en public/,
-              se muestra un monograma hasta que agregues la tuya. */}
           <div className="relative mx-auto w-60 sm:w-72">
             <div className="bg-glow pointer-events-none absolute -inset-10" aria-hidden="true" />
             <div className="relative rounded-2xl border border-accent/30 bg-panel/80 p-2 shadow-pop backdrop-blur">
@@ -114,7 +110,7 @@ export function Hero({ data }: { data: PortfolioData }) {
                   aria-label="Espacio reservado para la foto"
                   role="img"
                 >
-                  <span className="text-gradient font-mono text-7xl font-bold tracking-tight">KO</span>
+                  <span className="text-gradient font-display text-7xl font-bold tracking-tight">KO</span>
                   <span className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-mute">
                     Kevin Rene Otto
                   </span>
@@ -127,6 +123,19 @@ export function Hero({ data }: { data: PortfolioData }) {
               <span className="absolute -bottom-1.5 -left-1.5 h-5 w-5 rounded-bl-md border-b-2 border-l-2 border-accent" aria-hidden="true" />
               <span className="absolute -bottom-1.5 -right-1.5 h-5 w-5 rounded-br-md border-b-2 border-r-2 border-accent" aria-hidden="true" />
             </div>
+          </div>
+
+          {/* ID de sistema */}
+          <div className="rounded-xl border border-line bg-panel/80 p-3 font-mono text-[11px] leading-relaxed shadow-card backdrop-blur">
+            <p className="text-mute">
+              &gt; rol: <span className="text-fg/90">dev junior · analista en formación</span>
+            </p>
+            <p className="text-mute">
+              &gt; base: <span className="text-fg/90">Jardín América, Misiones</span>
+            </p>
+            <p className="text-mute">
+              &gt; estado: <span className="text-accent">operativo</span>
+            </p>
           </div>
 
           {/* Datos reales de GitHub; si no están disponibles, el bloque se omite. */}

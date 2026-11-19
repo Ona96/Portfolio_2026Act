@@ -34,7 +34,7 @@ export function ScrollProgress() {
   }, []);
 
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5 lg:hidden">
       <div
         className="h-full origin-left bg-gradient-to-r from-accent to-accent-2"
         style={{ transform: `scaleX(${progress})`, boxShadow: "0 0 10px rgb(var(--accent) / 0.7)" }}

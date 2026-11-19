@@ -17,11 +17,11 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: 80,
-          background: "#0a0618",
-          color: "#ebe9ff",
+          background: "#080414",
+          color: "#f0ebff",
         }}
       >
-        {/* Sol synthwave asomando en el fondo */}
+        {/* Sol synthwave magenta → violeta asomando en el fondo */}
         <div
           style={{
             position: "absolute",
@@ -30,7 +30,7 @@ export default function OpengraphImage() {
             width: 340,
             height: 340,
             borderRadius: 9999,
-            backgroundImage: "linear-gradient(to bottom, rgba(100,224,255,0.45), rgba(177,106,255,0.6))",
+            backgroundImage: "linear-gradient(to bottom, rgba(255,61,168,0.45), rgba(177,106,255,0.6))",
             display: "flex",
           }}
         />
@@ -52,9 +52,9 @@ export default function OpengraphImage() {
         </div>
         <div style={{ fontSize: 96, fontWeight: 700, marginTop: 24, display: "flex" }}>
           {owner.name}
-          <span style={{ color: "#64e0ff" }}>.</span>
+          <span style={{ color: "#ff3da8" }}>.</span>
         </div>
-        <div style={{ fontSize: 36, color: "#9890c8", marginTop: 16, display: "flex" }}>{owner.role}</div>
+        <div style={{ fontSize: 36, color: "#968cc3", marginTop: 16, display: "flex" }}>{owner.role}</div>
       </div>
     ),
     size,

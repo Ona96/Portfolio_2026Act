@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 interface MarqueeProps {
   items: readonly string[];
 }
@@ -11,7 +13,10 @@ function Row({ items, hidden }: { items: readonly string[]; hidden?: boolean }) 
           key={`${item}-${index}`}
           className="flex items-center gap-10 whitespace-nowrap pl-10 font-mono text-xs uppercase tracking-[0.3em] text-mute"
         >
-          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent/70" aria-hidden="true" />
+          <span
+            className={cn("h-1.5 w-1.5 shrink-0 rounded-full", index % 2 ? "bg-accent-2/70" : "bg-accent/70")}
+            aria-hidden="true"
+          />
           {item}
         </li>
       ))}
@@ -20,7 +25,7 @@ function Row({ items, hidden }: { items: readonly string[]; hidden?: boolean }) 
 }
 
 /**
- * Cinta infinita de tecnologías entre el Hero y el contenido.
+ * Ticker infinito de tecnologías entre el Hero y el contenido.
  * Dos filas idénticas + translateX(-50%) = loop sin cortes, puro CSS.
  * Decorativa: toda la cinta queda oculta a lectores de pantalla.
  */

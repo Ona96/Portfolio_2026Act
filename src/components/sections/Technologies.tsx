@@ -36,13 +36,18 @@ function iconFor(area: string): LucideIcon {
   return Cpu;
 }
 
+/**
+ * Loadout: el stack como inventario de consola. Las dos primeras áreas
+ * ocupan slots grandes con glow de tier; el resto entra en slots chicos.
+ * Los lenguajes se muestran como barras proporcionales a proyectos reales.
+ */
 export function Technologies({ data }: { data: PortfolioData }) {
   const { interests } = portfolioConfig.about;
   const declaredTechnologies = portfolioConfig.declaredTechnologies;
   const languages = data.languages.filter((l) => l.projects > 0);
+  const maxProjects = Math.max(...languages.map((l) => l.projects), 1);
 
-  /** Bento: las dos primeras áreas ocupan celdas dobles con mini escena;
-      si la última queda sola, ocupa la fila completa. */
+  /** Slot doble para el stack principal; si la última queda sola, fila completa. */
   function spanFor(index: number): string {
     if (index < 2) return "sm:col-span-2";
     if (index === interests.length - 1 && (interests.length - 2) % 4 === 1) return "sm:col-span-2 lg:col-span-4";
@@ -52,9 +57,9 @@ export function Technologies({ data }: { data: PortfolioData }) {
   return (
     <Section
       id="tecnologias"
-      eyebrow="02 · Tecnologías"
-      title="Tecnologías con las que trabajo"
-      description="Áreas de interés declaradas y lenguajes detectados automáticamente en mis repositorios públicos."
+      eyebrow="// 02 :: loadout"
+      title="Equipamiento"
+      description="Stack declarado y lenguajes detectados automáticamente en mis repositorios públicos."
     >
       <div className="space-y-10">
         {interests.length > 0 && (
@@ -67,11 +72,13 @@ export function Technologies({ data }: { data: PortfolioData }) {
                   <Reveal variant={feature ? "up" : "scale"} delay={(index % 4) * 70} className="h-full">
                     <div
                       className={cn(
-                        "relative flex h-full items-start gap-3 overflow-hidden rounded-xl border border-line bg-panel p-4 shadow-card transition-colors duration-200 hover:border-accent/50",
-                        feature && "min-h-[6rem] p-5",
+                        "hud-cell relative flex h-full items-start gap-3 overflow-hidden bg-panel",
+                        feature
+                          ? "min-h-[6rem] border border-accent/40 p-5 shadow-pop"
+                          : "border border-line p-4 shadow-card",
                       )}
                     >
-                      {feature && <div className="synth-mini" aria-hidden="true" />}
+                      {feature && <span className="synth-mini" aria-hidden="true" />}
                       <span
                         className={cn(
                           "relative mt-0.5 inline-flex shrink-0 items-center justify-center rounded-lg bg-raised text-accent",
@@ -83,7 +90,7 @@ export function Technologies({ data }: { data: PortfolioData }) {
                       <div className="relative">
                         <p className={cn("font-medium leading-relaxed", feature ? "text-base" : "text-sm")}>{area}</p>
                         <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.25em] text-mute/70">
-                          {feature ? "// stack principal" : `// área ${String(index + 1).padStart(2, "0")}`}
+                          {feature ? "// stack principal" : `// slot ${String(index + 1).padStart(2, "0")}`}
                         </p>
                       </div>
                     </div>
@@ -97,26 +104,43 @@ export function Technologies({ data }: { data: PortfolioData }) {
         {languages.length > 0 && (
           <Reveal variant="blur">
             <div>
-              <h3 className="mb-4 font-mono text-xs font-medium uppercase tracking-[0.2em] text-mute">
-                Lenguajes en mis repositorios
+              <h3 className="mb-4 font-mono text-xs uppercase tracking-[0.25em] text-mute">
+                &gt; lenguajes en mis repositorios
               </h3>
-              <ul className="flex flex-wrap gap-2" aria-label="Lenguajes usados en GitHub">
-                {languages.map((lang) => (
-                  <li
-                    key={lang.name}
-                    className="inline-flex items-center gap-2 rounded-lg border border-line bg-panel px-3 py-1.5 text-sm shadow-card transition-colors duration-200 hover:border-accent/50"
-                  >
-                    <span
-                      className="h-2.5 w-2.5 rounded-full"
-                      style={{ backgroundColor: languageColor(lang.name) }}
-                      aria-hidden="true"
-                    />
-                    {lang.name}
-                    <span className="font-mono text-xs text-mute" aria-label={`${lang.projects} ${lang.projects === 1 ? "proyecto" : "proyectos"}`}>
-                      {lang.projects}
-                    </span>
-                  </li>
-                ))}
+              <ul className="max-w-2xl space-y-3">
+                {languages.map((lang) => {
+                  const pct = Math.max(10, Math.round((lang.projects / maxProjects) * 100));
+                  return (
+                    <li key={lang.name}>
+                      <div className="mb-1 flex items-baseline justify-between font-mono text-xs">
+                        <span className="inline-flex items-center gap-2">
+                          <span
+                            className="h-2 w-2 rounded-full"
+                            style={{ backgroundColor: languageColor(lang.name) }}
+                            aria-hidden="true"
+                          />
+                          {lang.name}
+                        </span>
+                        <span className="text-mute">
+                          {lang.projects} {lang.projects === 1 ? "proyecto" : "proyectos"}
+                        </span>
+                      </div>
+                      <div
+                        className="h-1.5 overflow-hidden rounded-full bg-raised"
+                        role="meter"
+                        aria-label={`${lang.name}: ${lang.projects} ${lang.projects === 1 ? "proyecto" : "proyectos"}`}
+                        aria-valuemin={0}
+                        aria-valuenow={lang.projects}
+                        aria-valuemax={maxProjects}
+                      >
+                        <div
+                          className="h-full rounded-full"
+                          style={{ width: `${pct}%`, backgroundColor: languageColor(lang.name) }}
+                        />
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </Reveal>
@@ -125,8 +149,8 @@ export function Technologies({ data }: { data: PortfolioData }) {
         {declaredTechnologies.length > 0 && (
           <Reveal variant="blur">
             <div>
-              <h3 className="mb-4 font-mono text-xs font-medium uppercase tracking-[0.2em] text-mute">
-                Herramientas y frameworks
+              <h3 className="mb-4 font-mono text-xs uppercase tracking-[0.25em] text-mute">
+                &gt; herramientas y frameworks
               </h3>
               <ul className="flex flex-wrap gap-2" aria-label="Herramientas y frameworks">
                 {declaredTechnologies.map((tech) => (

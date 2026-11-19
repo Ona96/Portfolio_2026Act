@@ -2,7 +2,7 @@
 
 import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
-import { ProjectCard } from "@/components/projects/ProjectCard";
+import { ProjectRow } from "@/components/projects/ProjectRow";
 import { EmptyState } from "@/components/ui/Notice";
 import type { Project } from "@/types/github";
 
@@ -71,8 +71,8 @@ export function ProjectExplorer({ projects, languages, categories }: Props) {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar por nombre, tema o lenguaje"
-            className={`${field} pl-9`}
+            placeholder="> buscar por nombre, tema o lenguaje"
+            className={`${field} pl-9 font-mono`}
           />
         </div>
         <div>
@@ -122,7 +122,7 @@ export function ProjectExplorer({ projects, languages, categories }: Props) {
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-mute">
         <p aria-live="polite">
-          {visible.length} {visible.length === 1 ? "proyecto" : "proyectos"}
+          {visible.length} {visible.length === 1 ? "módulo" : "módulos"}
         </p>
         <div className="flex items-center gap-4">
           {hasFeatured && (
@@ -133,7 +133,7 @@ export function ProjectExplorer({ projects, languages, categories }: Props) {
                 onChange={(e) => setOnlyFeatured(e.target.checked)}
                 className="accent-[rgb(var(--accent))]"
               />
-              Solo destacados
+              Solo principales
             </label>
           )}
           {filtering && (
@@ -146,16 +146,16 @@ export function ProjectExplorer({ projects, languages, categories }: Props) {
 
       {visible.length === 0 ? (
         <div className="mt-6">
-          <EmptyState title="Ningún proyecto coincide" text="Probá con otro término o limpiá los filtros." />
+          <EmptyState title="Ningún módulo coincide" text="Probá con otro término o limpiá los filtros." />
         </div>
       ) : (
-        <ul className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {visible.map((p) => (
-            <li key={p.id} className="h-full">
-              <ProjectCard project={p} />
-            </li>
-          ))}
-        </ul>
+        <div className="mt-6 overflow-hidden rounded-xl border border-line/70">
+          <ul className="divide-y divide-line/60">
+            {visible.map((project, index) => (
+              <ProjectRow key={project.id} project={project} index={index} />
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );

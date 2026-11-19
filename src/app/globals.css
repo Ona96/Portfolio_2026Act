@@ -4,7 +4,7 @@
 
 @layer base {
   /* ------------------------------------------------------------
-     Identidad synthwave: violetas profundos + neón violeta/cian.
+     Identidad KEVIN-OS: violetas profundos + neón violeta/magenta.
      El esquema oscuro es el valor por defecto (:root); el claro
      se activa con la clase .light que aplica el script de tema.
      El modo claro apaga los fondos retro (sol, grilla, scanlines)
@@ -12,15 +12,15 @@
   ------------------------------------------------------------ */
   :root {
     color-scheme: dark;
-    --ink: 10 6 24;
-    --panel: 16 11 36;
-    --raised: 25 18 54;
-    --line: 46 35 92;
-    --fg: 235 233 255;
-    --mute: 152 144 200;
+    --ink: 8 4 20;
+    --panel: 14 8 30;
+    --raised: 23 14 46;
+    --line: 44 28 82;
+    --fg: 240 235 255;
+    --mute: 150 140 195;
     --accent: 177 106 255;
     --accent-ink: 16 8 38;
-    --accent2: 100 224 255;
+    --accent2: 255 61 168;
     --shadow-card: 0 1px 0 rgb(255 255 255 / 0.04), 0 10px 30px -18px rgb(0 0 0 / 0.6);
     --shadow-pop: 0 2px 0 rgb(255 255 255 / 0.06), 0 18px 44px -20px rgb(0 0 0 / 0.7), 0 0 30px -6px rgb(var(--accent) / 0.45);
     --glow: rgb(var(--accent) / 0.16);
@@ -38,7 +38,7 @@
     --mute: 101 92 150;
     --accent: 109 40 217;
     --accent-ink: 255 255 255;
-    --accent2: 8 145 178;
+    --accent2: 162 28 175;
     --shadow-card: 0 1px 2px rgb(27 19 59 / 0.06), 0 12px 28px -18px rgb(27 19 59 / 0.2);
     --shadow-pop: 0 2px 4px rgb(27 19 59 / 0.08), 0 20px 44px -20px rgb(27 19 59 / 0.28), 0 0 26px -8px rgb(var(--accent) / 0.3);
     --glow: rgb(var(--accent) / 0.1);
@@ -154,7 +154,7 @@ html.idle .synth-stars { animation: star-twinkle 4s ease-in-out infinite; }
    IdleEffects dispara un micro-glitch cada ~45s de navegación:
    el contenido tiembla apenas y las scanlines parpadean. */
 body.glitching main { animation: glitch-shift 0.34s steps(2) both; }
-body.glitching header .font-mono {
+body.glitching .rail-logo {
   text-shadow: -2px 0 rgb(var(--accent2) / 0.55), 2px 0 rgb(var(--accent) / 0.55);
 }
 
@@ -186,12 +186,18 @@ body.glitching header .font-mono {
 }
 
 /* ---------------- Firmas visuales ---------------- */
-/* Texto con degradado violeta → cian */
+/* Texto con degradado violeta → magenta */
 .text-gradient {
   background-image: linear-gradient(100deg, rgb(var(--accent)) 8%, rgb(var(--accent2)) 92%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Texto solo contorno (línea media del nombre del Hero) */
+.text-outline { color: transparent; -webkit-text-stroke: 1.5px rgb(var(--fg) / 0.9); }
+@supports not (-webkit-text-stroke: 1px black) {
+  .text-outline { color: rgb(var(--fg) / 0.9); }
 }
 
 /* Resplandor neón para botones y marcos destacados */
@@ -201,6 +207,10 @@ body.glitching header .font-mono {
 html.light .glow-accent {
   box-shadow: 0 0 18px rgb(var(--accent) / 0.22), 0 0 44px rgb(var(--accent) / 0.1);
 }
+
+/* Barra de la pantalla de arranque */
+.boot-bar { animation: boot-bar 1.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; transform-origin: left center; }
+@keyframes boot-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 /* ---------------- Construcción al scroll ----------------
    Reveal 2.0: el estado inicial solo existe con JS activo
@@ -258,7 +268,7 @@ html.js .reveal:not(.revealed) .draw-line::after { transform: scaleX(0); }
 html.js .reveal:not(.revealed) .tl-progress { transform: scaleY(0); }
 html.js .reveal:not(.revealed) .tl-dot { opacity: 0; transform: scale(0.3); }
 
-/* Panel HUD: esquinas neón para los indicadores */
+/* Panel HUD: esquinas neón para readouts y tarjetas de sistema */
 .hud-cell { position: relative; }
 .hud-cell::before,
 .hud-cell::after {
@@ -278,11 +288,8 @@ html.js .reveal:not(.revealed) .tl-dot { opacity: 0; transform: scale(0.3); }
   to { transform: translateX(-50%); }
 }
 
-/* Tilt 3D de las cards (el JS de TiltCard mueve el transform) */
-.tilt { transition: transform 0.3s ease; will-change: transform; }
-
 /* ---------------- Mini escenas synthwave ---------------- */
-/* Marca de agua en celdas grandes del bento */
+/* Marca de agua en celdas grandes del loadout */
 .synth-mini {
   position: absolute;
   right: -25%;
@@ -297,7 +304,7 @@ html.js .reveal:not(.revealed) .tl-dot { opacity: 0; transform: scale(0.3); }
   pointer-events: none;
 }
 
-/* Portada decorativa de proyectos sin imagen */
+/* Ornamento de portada en filas y paneles */
 .synth-card-sun {
   position: absolute;
   left: 50%;
@@ -326,7 +333,7 @@ html.js .reveal:not(.revealed) .tl-dot { opacity: 0; transform: scale(0.3); }
   mask-image: linear-gradient(to bottom, transparent 0, black 40%, black 82%, transparent 100%);
 }
 
-/* Horizonte al pie del footer */
+/* Horizonte al pie de los créditos */
 .synth-foot {
   position: absolute;
   left: -20%;
