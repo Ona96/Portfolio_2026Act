@@ -249,12 +249,14 @@ html.js .reveal[data-variant="scale"]:not(.revealed) { transform: scale(0.95); }
 html.js .reveal:not(.revealed) .draw-line::after { transform: scaleX(0); }
 
 /* Timeline de experiencia: la línea se dibuja de nodo en nodo
-   y CORTA en el último (no invade el texto final de la entrada). */
+   y CORTA en el último (no invade el texto final de la entrada).
+   Nace del borde superior del punto y muere dentro del siguiente:
+   los puntos (opacos) tapan ambas uniones y queda continua. */
 .tl-seg {
   position: absolute;
   left: -1.65rem;
-  top: 1rem;
-  bottom: -2.375rem;
+  top: 0.375rem;
+  bottom: -2.5rem;
   width: 2px;
   border-radius: 999px;
   background: linear-gradient(to bottom, rgb(var(--accent)), rgb(var(--accent2)));
